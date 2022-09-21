@@ -25,7 +25,7 @@ pass_context = click.make_pass_decorator(CliContext, ensure=True)
 
 @click.group('cli')
 @click.option('-p', '--profile', default='default', help='The aws profile to be used. Needs to be defined in .aws/credentials. Defaults to <default>')
-@click.option('-r', '--region', default='eu-central-1', help='The aws region to be used. Defaults to <eu-central-1>')
+@click.option('-r', '--region', default='ap-northeast-2', help='The aws region to be used. Defaults to <eu-central-1>')
 @pass_context
 def cli(context, profile, region):
     context.aws_profile = profile
@@ -145,13 +145,19 @@ def __create_log_subscription(target_log_group):
             if len(describe_log_groups_response['logGroups']) == 0:
                 print('LogGroup <{}> not available'.format(target_log_group))
             log_group_arn = describe_log_groups_response['logGroups'][0]['arn']
+            print("log-group : ",target_log_group)
+            print("log-group_arn : ",log_group_arn)
+            print("SHIPPER_NAME : ",SHIPPER_NAME)
+            print("StatementId : ",'{}-loki-log-shipper'.format(target_log_group.split('/')[-1]))
+            print("a : ",log_group_arn.split(':')[4])
 
             lambda_client.add_permission(
                 FunctionName=SHIPPER_NAME,
                 StatementId='{}-loki-log-shipper'.format(target_log_group.split('/')[-1]),
                 Action='lambda:InvokeFunction',
-                Principal="logs.eu-central-1.amazonaws.com",
-                SourceArn=log_group_arn
+                Principal="logs.ap-northeast-2.amazonaws.com",
+                SourceArn=log_group_arn,
+                SourceAccount=log_group_arn.split(':')[4]
             )
         except Exception as e:
             if not isinstance(e, lambda_client.exceptions.ResourceConflictException):
