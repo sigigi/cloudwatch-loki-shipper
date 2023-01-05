@@ -1,4 +1,4 @@
-# folk 후 코드 수정, 업데이트 내용 by sigigi
+# fork 후 코드 수정, 업데이트 내용 by sigigi
 - loki-2.6.1 버전 대응으로 shipper json 포맷이 변경되어, 그에 맞춰 대응
 - default region 값이 제대로 반영이 되지 않는 부분이 있어 이 부분은 추가 수정 필요.
 - cli.py start 및 로그그룹 등록시 간헐적으로 permission 문제로 등록되지 못하고 에러 발생 -> 여러번하면 등록은 된다. delay가 필요할 것으로 추정. 
